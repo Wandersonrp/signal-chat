@@ -2,7 +2,17 @@
 
 <PageTitle>Home</PageTitle>
 
-<div class="flex h-screen w-full">
-    <Sidebar />
-    <ChatContainer />
-</div>
+<AuthorizeView>
+    <Authorized>
+        <NavMenu />
+        <div class="flex h-screen w-full">
+            <Sidebar />
+            <ChatContainer />
+        </div>
+    </Authorized>
+    <NotAuthorized>
+        <Login />
+    </NotAuthorized>
+</AuthorizeView>
+
+
