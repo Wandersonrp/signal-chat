@@ -9,6 +9,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
+builder.Services.AddControllers();
+
 builder.Services
     .AddAuthentication(options =>
     {
@@ -30,12 +32,9 @@ builder.Services
         options.Scope.Add("Profile");
         options.Events.OnCreatingTicket = context =>
         {
-            var pictureUri = context.User.GetProperty("picture").GetString();
-#pragma warning disable CS8604 // Possível argumento de referência nula.
-#pragma warning disable CS8602 // Desreferência de uma referência possivelmente nula.
+            var pictureUri = context.User.GetProperty("picture").GetString() ?? string.Empty;
+
             context.Identity.AddClaim(new Claim("picture", pictureUri));
-#pragma warning restore CS8602 // Desreferência de uma referência possivelmente nula.
-#pragma warning restore CS8604 // Possível argumento de referência nula.
             return Task.CompletedTask;
         };
     });
@@ -52,17 +51,12 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseRouting();
 app.UseStaticFiles();
 app.UseAntiforgery();
-
-app.UseRouting();
 app.UseAuthorization();
 
-app.UseEndpoints(endpoints =>
-{
-    endpoints.MapBlazorHub();
-    endpoints.MapControllers();
-});
+app.MapControllers();
 
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
