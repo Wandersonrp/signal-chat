@@ -1,5 +1,9 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.EntityFrameworkCore;
+using SignalChat.Api.Data;
+using SignalChat.Api.Hubs;
+using SignalChat.Api.Services.Users;
 using SignalChat.Components;
 using System.Security.Claims;
 
@@ -10,6 +14,8 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
 builder.Services.AddControllers();
+
+builder.Services.AddScoped<IUserService, UserService>();
 
 builder.Services
     .AddAuthentication(options =>
@@ -39,6 +45,11 @@ builder.Services
         };
     });
 
+builder.Services.AddDbContext<SignalChatDbContext>(options =>
+{
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -57,6 +68,8 @@ app.UseAntiforgery();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.MapHub<ChatHub>("/chat");
 
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();

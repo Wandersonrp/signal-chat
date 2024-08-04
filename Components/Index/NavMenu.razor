@@ -1,12 +1,24 @@
-﻿<div class="bg-slack_bg py-2 px-4 fixed flex w-full items-center justify-between">
-    <div class="px-4 flex items-center">
-        <iconify-icon class="text-white" icon="mingcute:user-4-line" width="32" height="32"></iconify-icon>     
-        <a class="bg-gray-200 p-2 text-white rounded" href="auth/signout">Signout</a>
+﻿<div class="fixed flex w-full items-center justify-between bg-slack_bg px-4 py-2">
+    <div class="flex items-center px-4">
+        @if(!string.IsNullOrEmpty(ImageUrl))
+        {            
+            <img src="@ImageUrl" class="h-9 w-9 cursor-pointer rounded-full shadow"/>
+        }
+        else
+        {
+            <iconify-icon class="text-white" icon="mingcute:user-4-line" width="32" height="32"></iconify-icon>
+        } 
+        <div>
+            <a class="bg-gray-950/25 ml-2 flex items-center rounded p-2 text-white hover:bg-gray-950/35" href="auth/signout">
+                <iconify-icon class="mr-2 text-white" icon="ri:logout-circle-line" width="20" height="20"></iconify-icon>
+                <span>Logout</span>
+            </a>
+        </div>
     </div>
     
     <HeaderSearch />
 
-    <div class="px-4 flex cursor-pointer items-center opacity-75 hover:opacity-50">
+    <div class="flex cursor-pointer items-center px-4 opacity-75 hover:opacity-50">
         <iconify-icon class="text-white" icon="ph:question" width="28" height="28"></iconify-icon>
     </div>
 </div>
