@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@inject IHttpContextAccessor HttpContextAccessor
+
+<!DOCTYPE html>
 <html lang="pt-br">
 
 <head>
@@ -11,9 +13,23 @@
 </head>
 
 <body>
-    <Routes />
+    <Routes Cookie="@_cookie" />
     <script src="_framework/blazor.web.js"></script>    
     <script src="https://cdn.jsdelivr.net/npm/iconify-icon@2.1.0/dist/iconify-icon.min.js"></script>
 </body>
 
 </html>
+
+@code
+{
+    private string _cookie { get; set; } = string.Empty;
+
+    protected override Task OnInitializedAsync()
+    {
+        var httpContext = HttpContextAccessor.HttpContext;
+
+        _cookie = httpContext?.Request.Cookies["SignalChatCookie"] ?? string.Empty;
+
+        return base.OnInitializedAsync();
+    }
+}
