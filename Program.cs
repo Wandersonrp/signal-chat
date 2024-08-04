@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
+using SignalChat;
 using SignalChat.Api.Data;
 using SignalChat.Api.Hubs;
 using SignalChat.Api.Services.Users;
@@ -16,6 +18,8 @@ builder.Services.AddRazorComponents()
 builder.Services.AddControllers();
 
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<CookiesProvider>();
+builder.Services.AddSingleton<ConnectionManager>();
 
 builder.Services
     .AddAuthentication(options =>
@@ -48,6 +52,18 @@ builder.Services
 builder.Services.AddDbContext<SignalChatDbContext>(options =>
 {
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
+});
+
+builder.Services.AddHttpContextAccessor();
+
+builder.Services.AddSignalR(config => config.EnableDetailedErrors = true);
+
+builder.Services.AddResponseCompression(options =>
+{
+    options.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(new[] 
+    {  
+        "application/octet-stream"
+    });
 });
 
 var app = builder.Build();

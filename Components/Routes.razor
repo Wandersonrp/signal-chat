@@ -1,4 +1,6 @@
-﻿<CascadingAuthenticationState>
+﻿@inject CookiesProvider CookiesProvider
+
+<CascadingAuthenticationState>
     <Router AppAssembly="typeof(Program).Assembly">
         <Found Context="routeData">
             <RouteView RouteData="routeData" DefaultLayout="typeof(Layout.MainLayout)" />
@@ -6,3 +8,16 @@
         </Found>
     </Router>
 </CascadingAuthenticationState>
+
+@code 
+{
+    [Parameter]
+    public string Cookie { get; set; } = string.Empty;
+
+    protected override Task OnInitializedAsync()
+    {
+        CookiesProvider.Cookie = Cookie;
+
+        return base.OnInitializedAsync();
+    }
+}
